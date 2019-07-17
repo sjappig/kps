@@ -55,7 +55,7 @@ contract KPS {
         (Player storage player, Player storage opponent) = getPlayers(game);
 
         require(opponent.bet != 0, "Opponent has not placed a bet yet");
-        require(player.nonce != 0, "Nonce already revealed");
+        require(player.selection == Selection.NONE, "Selection already revealed");
 
         bool lastReveal = game.latestReveal != address(0);
         player.nonce = nonce;
