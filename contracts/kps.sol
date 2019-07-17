@@ -20,7 +20,7 @@ contract KPS {
 
     uint256 private gameCounter;
     uint256 private pendingGame;
-    
+
     mapping(uint256 => Game) private games;
 
     function startGame(bytes32 selectionHash) public payable returns (uint256 gameIdentifier) {
@@ -45,7 +45,7 @@ contract KPS {
 
         return currentGame;
     }
-    
+
     function reveal(uint256 gameIdentifier, uint256 nonce, Selection selection) public returns (Result) {
         Game storage game = games[gameIdentifier];
 
@@ -61,12 +61,12 @@ contract KPS {
         player.nonce = nonce;
         game.latestReveal = msg.sender;
         game.timestamp = now;
-        
+
         if (!isValidHash(nonce, msg.sender, selection, player.selectionHash)) {
             payBets(game, [opponent, opponent]);
             return Result.CHEATER;
         }
-        
+
         player.selection = selection;
         Result result = Result.UNKNOWN;
 
@@ -80,10 +80,10 @@ contract KPS {
                 payBets(game, [player, opponent]);
             }
         }
-        
+
         return result;
     }
-    
+
     function collectAfterTimeout(uint256 gameIdentifier) public {
         Game storage game = games[gameIdentifier];
         require(game.timestamp != 0, "Game is not active");
@@ -99,24 +99,24 @@ contract KPS {
         Player[2] storage players = game.players;
         uint8 playerIndex = currentPlayerIndex(players);
         uint8 opponentIndex = playerIndex == 0 ? 1 : 0;
-        
+
         return (players[playerIndex], players[opponentIndex]);
     }
-    
+
     function currentPlayerIndex(Player[2] storage players) private view returns (uint8) {
         for (uint8 idx = 0; idx < 2; ++idx) {
             if (players[idx].addr == msg.sender) {
                 return idx;
             }
         }
-        
+
         revert("Sender is not a player in the referred game");
     }
-    
+
     function isValidHash(uint256 nonce, address addr, Selection selection, bytes32 expectedHash) private pure returns (bool) {
         return keccak256(abi.encodePacked(nonce, addr, selection)) == expectedHash;
     }
-    
+
     function payBets(Game storage game, Player[2] memory receivers) private {
         for (uint8 idx = 0; idx < 2; ++idx) {
             receivers[idx].addr.transfer(game.players[idx].bet);
@@ -124,12 +124,12 @@ contract KPS {
         }
         game.timestamp = 0;
     }
-    
+
     function resolveGame(Player storage player, Player storage opponent) private view returns (Result) {
         if (player.selection == opponent.selection) {
             return Result.TIE;
         }
-        
+
         if (player.selection == Selection.ROCK) {
             if (opponent.selection == Selection.SCISSORS) {
                 return Result.WINNER;
@@ -138,7 +138,7 @@ contract KPS {
                 return Result.LOSER;
             }
         }
-        
+
         if (player.selection == Selection.PAPER) {
             if (opponent.selection == Selection.ROCK) {
                 return Result.WINNER;
@@ -147,7 +147,7 @@ contract KPS {
                 return Result.LOSER;
             }
         }
-        
+
         if (player.selection == Selection.SCISSORS) {
             if (opponent.selection == Selection.PAPER) {
                 return Result.WINNER;
@@ -156,7 +156,7 @@ contract KPS {
                 return Result.LOSER;
             }
         }
-        
+
         return Result.UNKNOWN;
     }
 }
