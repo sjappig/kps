@@ -4,6 +4,10 @@ contract KPS {
     enum Selection { NONE, ROCK, PAPER, SCISSORS }
     enum Result { UNKNOWN, WINNER, LOSER, CHEATER, TIE }
 
+    event GameStarted(address indexed addr, uint256 indexed gameIdentifier);
+    event Revealed(uint256 indexed gameIdentifier, address addr, Selection selection);
+    event GameEnded(uint256 indexed gameIdentifier, Result opponentResult);
+
     struct Player {
         address payable addr;
         uint256 bet;
@@ -23,7 +27,7 @@ contract KPS {
 
     mapping(uint256 => Game) private games;
 
-    function startGame(bytes32 selectionHash) public payable returns (uint256 gameIdentifier) {
+    function startGame(bytes32 selectionHash) public payable {
         require(msg.value == 1 finney, "Bet has to be exactly 1 Finney");
 
         bool isGamePending = pendingGame != 0;
@@ -43,7 +47,7 @@ contract KPS {
 
         pendingGame = isGamePending ? 0 : currentGame;
 
-        return currentGame;
+        emit GameStarted(msg.sender, currentGame);
     }
 
     function reveal(uint256 gameIdentifier, uint256 nonce, Selection selection) public returns (Result) {
@@ -64,10 +68,14 @@ contract KPS {
 
         if (!isValidHash(nonce, msg.sender, selection, player.selectionHash)) {
             payBets(game, [opponent, opponent]);
+            emit GameEnded(gameIdentifier, Result.CHEATER);
             return Result.CHEATER;
         }
 
         player.selection = selection;
+
+        emit Revealed(gameIdentifier, msg.sender, selection);
+
         Result result = Result.UNKNOWN;
 
         if (lastReveal) {
@@ -79,6 +87,7 @@ contract KPS {
             } else if (result == Result.TIE) {
                 payBets(game, [player, opponent]);
             }
+            emit GameEnded(gameIdentifier, result);
         }
 
         return result;
@@ -114,7 +123,11 @@ contract KPS {
     }
 
     function isValidHash(uint256 nonce, address addr, Selection selection, bytes32 expectedHash) private pure returns (bool) {
-        return keccak256(abi.encodePacked(nonce, addr, selection)) == expectedHash;
+        return calculateSelectionHash(nonce, addr, selection) == expectedHash;
+    }
+
+    function calculateSelectionHash(uint256 nonce, address addr, Selection selection) public pure returns (bytes32) {
+        return keccak256(abi.encodePacked(nonce, addr, uint8(selection)));
     }
 
     function payBets(Game storage game, Player[2] memory receivers) private {
