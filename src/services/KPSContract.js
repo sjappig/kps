@@ -1,5 +1,7 @@
 import Web3 from 'web3';
-import { abi, address } from '../abi/kps';
+import { abi } from '../../build/contracts/KPS.json';
+
+const address = '0x6924D2D3939fC772DC85Df084c74132c4996Ac08';
 
 class KPSContract {
   initialise() {
@@ -32,7 +34,7 @@ class KPSContract {
   }
 
   async reveal(gameIdentifier, nonce, selection) {
-      return await this.contract.methods.reveal(gameIdentifier, nonce, this.toSelectionEnum(selection)).call();
+      return await this.contract.methods.reveal(gameIdentifier, nonce, this.toSelectionEnum(selection)).send({from: this.walletAddress, to: address});
   }
 
   get walletAddress() {
