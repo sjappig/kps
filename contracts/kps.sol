@@ -123,11 +123,8 @@ contract KPS {
     }
 
     function isValidHash(uint256 nonce, address addr, Selection selection, bytes32 expectedHash) private pure returns (bool) {
-        return calculateSelectionHash(nonce, addr, selection) == expectedHash;
-    }
-
-    function calculateSelectionHash(uint256 nonce, address addr, Selection selection) public pure returns (bytes32) {
-        return keccak256(abi.encodePacked(nonce, addr, uint8(selection)));
+        bytes32 hash = keccak256(abi.encodePacked(nonce, addr, uint8(selection)));
+        return hash == expectedHash;
     }
 
     function payBets(Game storage game, Player[2] memory receivers) private {
