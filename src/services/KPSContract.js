@@ -1,44 +1,32 @@
 import Web3 from 'web3';
 import { abi } from '../../build/contracts/KPS.json';
 
-const address = '0x6924D2D3939fC772DC85Df084c74132c4996Ac08';
+const contractAddress = '0x6924D2D3939fC772DC85Df084c74132c4996Ac08';
 
 class KPSContract {
   initialise() {
-    this.web3 = new Web3(window.ethereum)
+    this.web3 = new Web3(window.ethereum);
   }
 
-  async select(selection, gameStartedCallback, gameEndedCallback) {
+  async select(selection) {
     // eslint-disable-next-line
     console.log(selection);
     const nonce = this.nonce;
-    const selectionHash = this.calculateSelectionHash(selection, nonce);
+    const accounts = await this.accounts();
+    const selectionHash = this.calculateSelectionHash(selection, nonce, accounts[0]);
     // eslint-disable-next-line
     console.log(selectionHash);
-    this.contract.events.GameStarted({
-      filter: { addr: this.walletAddress },
-    }, (error, evt) => {
-      const { gameIdentifier } = evt.returnValues;
-      // eslint-disable-next-line
-      console.log(gameIdentifier);
-      const subscription = this.contract.events.Revealed({
-        filter: { gameIdentifier },
-      }, (error, evt) => {
-        const { opponentResult } = evt.returnValues;
-        gameEndedCallback(opponentResult);
-      });
-      gameStartedCallback(gameIdentifier, nonce, subscription);
-    });
-// eslint-disable-next-line
-    console.log(await this.contract.methods.startGame(selectionHash).send({from: this.walletAddress, to: address, value: this.web3.utils.toWei('1', 'finney')}));
+    // eslint-disable-next-line
+    console.log(await this.contract.methods.startGame(selectionHash).send({from: accounts[0], to: contractAddress, value: this.web3.utils.toWei('1', 'finney')}));
   }
 
   async reveal(gameIdentifier, nonce, selection) {
-      return await this.contract.methods.reveal(gameIdentifier, nonce, this.toSelectionEnum(selection)).send({from: this.walletAddress, to: address});
+    const accounts = await this.accounts();
+    return await this.contract.methods.reveal(gameIdentifier, nonce, this.toSelectionEnum(selection)).send({from: accounts[0], to: contractAddress});
   }
 
-  get walletAddress() {
-    return window.web3.eth.accounts[0];
+  async accounts() {
+    return this.web3.eth.getAccounts();
   }
 
   get nonce() {
@@ -46,7 +34,7 @@ class KPSContract {
   }
 
   get contract() {
-      return new this.web3.eth.Contract(abi, address);
+      return new this.web3.eth.Contract(abi, contractAddress);
   }
 
   toSelectionEnum(selection) {
@@ -59,10 +47,10 @@ class KPSContract {
     return kpsMap[selection];
   }
 
-  calculateSelectionHash(selection, nonce) {
+  calculateSelectionHash(selection, nonce, address) {
     return this.web3.utils.soliditySha3(
       { type: 'uint256', value: nonce },
-      { type: 'address', value: this.walletAddress },
+      { type: 'address', value: address },
       { type: 'uint8', value: this.toSelectionEnum(selection) }
     )
   }
