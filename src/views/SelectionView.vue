@@ -1,18 +1,21 @@
 <template>
   <div class="kps">
     <h1>Select rock, paper or scissors</h1>
-    <img v-if="selection === undefined || selection === 'rock'" alt="Rock" src="../assets/rock.jpg" @click="rock">
-    <img v-if="selection === undefined || selection === 'paper'" alt="Paper" src="../assets/paper.jpg" @click="paper">
-    <img v-if="selection === undefined || selection === 'scissors'" alt="Scissors" src="../assets/scissors.jpg" @click="scissors">
+    <selection :image="require('@/assets/rock.jpg')" alt="Rock" @click="rock"></selection>
+    <selection :image="require('@/assets/paper.jpg')" alt="Paper" @click="paper"></selection>
+    <selection :image="require('@/assets/scissors.jpg')" alt="Scissors" @click="scissors"></selection>
     <button :disabled="gameIdentifier === undefined" @click="reveal">Reveal</button>
   </div>
 </template>
 
 <script>
 import KPSContract from '../services/KPSContract';
+import Selection from '../components/selection/Selection.vue';
 
 export default {
-  name: 'Rock-paper-scissors',
+  components: {
+    Selection,
+  },
   mounted() {
     KPSContract.initialise();
   },
@@ -61,13 +64,4 @@ export default {
 </script>
 
 <style scoped>
-img {
-  width: 25%;
-  border-radius: 50%;
-}
-
-img:hover {
-  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
-}
-
 </style>

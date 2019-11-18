@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <KPS/>
+    <selection-view></selection-view>
   </div>
 </template>
 
 <script>
-import KPS from './components/KPS.vue'
+import SelectionView from './views/SelectionView.vue'
 
 export default {
   name: 'app',
   components: {
-    KPS
+    SelectionView
   },
   async mounted() {
     await window.ethereum.enable();
