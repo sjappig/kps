@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import KPSContract from '../services/KPSContract';
-import Selection from '../components/selection/Selection.vue';
+import KPSContract from '@/services/KPSContract';
+import Selection from '@/components/selection/Selection.vue';
 
 export default {
   components: {
