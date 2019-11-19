@@ -1,9 +1,9 @@
 <template>
   <div class="kps">
     <h1>Select rock, paper or scissors</h1>
-    <selection :image="require('@/assets/rock.jpg')" alt="Rock" @click="rock"></selection>
-    <selection :image="require('@/assets/paper.jpg')" alt="Paper" @click="paper"></selection>
-    <selection :image="require('@/assets/scissors.jpg')" alt="Scissors" @click="scissors"></selection>
+    <selection :image="require('@/assets/rock.jpg')" :disabled="!!selection" :selected="selection === 'rock'" alt="Rock" @click="rock"></selection>
+    <selection :image="require('@/assets/paper.jpg')" :disabled="!!selection" :selected="selection === 'paper'" alt="Paper" @click="paper"></selection>
+    <selection :image="require('@/assets/scissors.jpg')" :disabled="!!selection" :selected="selection === 'scissors'" alt="Scissors" @click="scissors"></selection>
     <button :disabled="gameIdentifier === undefined" @click="reveal">Reveal</button>
   </div>
 </template>

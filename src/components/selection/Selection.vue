@@ -1,11 +1,11 @@
 <template>
-  <img :alt="alt" :src="image" @click="onClick">
+  <img :alt="alt" :src="image" @click="onClick" :class="{ disabled, selected }">
 </template>
 
 <script>
 
 export default {
-  props: ['alt', 'image'],
+  props: ['alt', 'disabled', 'image', 'selected'],
   methods: {
     async onClick() {
       this.$emit('click');
@@ -18,10 +18,18 @@ export default {
 img {
   width: 25%;
   border-radius: 50%;
+  margin: 1px;
 }
 
-img:hover {
-  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+img.disabled {
+  opacity: 0.5;
 }
 
+img:not(.disabled):hover {
+  box-shadow: 0 0 2px 1px black;
+}
+
+img.selected {
+  box-shadow: 0 0 2px 1px black;
+}
 </style>
