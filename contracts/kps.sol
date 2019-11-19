@@ -71,7 +71,7 @@ contract KPS {
 
         emit Revealed(gameIdentifier, msg.sender, selection);
 
-        if (!isValidHash(nonce, msg.sender, selection, player.selectionHash)) {
+        if (!isValidHash(nonce, selection, player.selectionHash)) {
             payBets(game, [opponent, opponent]);
             endGame(game);
             emit Winner(gameIdentifier, opponent.addr);
@@ -122,8 +122,8 @@ contract KPS {
         revert("Sender is not a player in the referred game");
     }
 
-    function isValidHash(uint256 nonce, address addr, Selection selection, bytes32 expectedHash) private pure returns (bool) {
-        bytes32 hash = keccak256(abi.encodePacked(nonce, addr, uint8(selection)));
+    function isValidHash(uint256 nonce, Selection selection, bytes32 expectedHash) private pure returns (bool) {
+        bytes32 hash = keccak256(abi.encodePacked(nonce, uint8(selection)));
         return hash == expectedHash;
     }
 

@@ -11,10 +11,9 @@ contract('KPS', accounts => {
     SCISSORS: 3,
   }
 
-  function calculateHash(nonce, addr, selection) {
+  function calculateHash(nonce, selection) {
     return web3.utils.soliditySha3(
       { type: 'uint256', value: nonce },
-      { type: 'address', value: addr },
       { type: 'uint8', value: selection}
     );
   }
@@ -36,7 +35,7 @@ contract('KPS', accounts => {
     const expectedWinner = players[1];
 
     for (const player of players) {
-      const hash = calculateHash(player.nonce, player.address, player.selection);
+      const hash = calculateHash(player.nonce, player.selection);
       const { receipt } = await instance.startGame(hash, { from: player.address, value: VALID_BET_VALUE });
 
       player.expectedBalance -= receipt.cumulativeGasUsed * GAS_PRICE;

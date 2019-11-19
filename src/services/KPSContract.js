@@ -13,7 +13,7 @@ class KPSContract {
     console.log(selection);
     const nonce = this.nonce;
     const accounts = await this.accounts();
-    const selectionHash = this.calculateSelectionHash(selection, nonce, accounts[0]);
+    const selectionHash = this.calculateSelectionHash(selection, nonce);
     // eslint-disable-next-line
     console.log(selectionHash);
     // eslint-disable-next-line
@@ -47,10 +47,9 @@ class KPSContract {
     return kpsMap[selection];
   }
 
-  calculateSelectionHash(selection, nonce, address) {
+  calculateSelectionHash(selection, nonce) {
     return this.web3.utils.soliditySha3(
       { type: 'uint256', value: nonce },
-      { type: 'address', value: address },
       { type: 'uint8', value: this.toSelectionEnum(selection) }
     )
   }
