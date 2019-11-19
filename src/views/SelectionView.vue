@@ -1,20 +1,24 @@
 <template>
   <div class="kps">
     <h1>Select rock, paper or scissors</h1>
-    <selection :image="require('@/assets/rock.jpg')" :disabled="!!selection" :selected="selection === 'rock'" alt="Rock" @click="rock"></selection>
-    <selection :image="require('@/assets/paper.jpg')" :disabled="!!selection" :selected="selection === 'paper'" alt="Paper" @click="paper"></selection>
-    <selection :image="require('@/assets/scissors.jpg')" :disabled="!!selection" :selected="selection === 'scissors'" alt="Scissors" @click="scissors"></selection>
+    <rock :selection="selection" @select="select"></rock>
+    <paper :selection="selection" @select="select"></paper>
+    <scissors :selection="selection" @select="select"></scissors>
     <button :disabled="gameIdentifier === undefined" @click="reveal">Reveal</button>
   </div>
 </template>
 
 <script>
 import KPSContract from '@/services/KPSContract';
-import Selection from '@/components/selection/Selection.vue';
+import Rock from '@/components/selection/Rock.vue';
+import Paper from '@/components/selection/Paper.vue';
+import Scissors from '@/components/selection/Scissors.vue';
 
 export default {
   components: {
-    Selection,
+    Rock,
+    Paper,
+    Scissors
   },
   mounted() {
     KPSContract.initialise();
@@ -28,15 +32,6 @@ export default {
     }
   },
   methods: {
-    async rock() {
-      await this.select('rock');
-    },
-    async paper() {
-      await this.select('paper');
-    },
-    async scissors() {
-      await this.select('scissors');
-    },
     async select(selection) {
       if (this.selection !== undefined) {
         return;
