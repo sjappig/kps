@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import { abi } from '../../build/contracts/KPS.json';
+import { abi } from 'contracts/KPS.json';
 
 const contractAddress = '0x6924D2D3939fC772DC85Df084c74132c4996Ac08';
 
