@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import SelectionView from '@/views/SelectionView.vue'
+import SelectionView from '@/views/SelectionView'
 
 export default {
   name: 'Rock-paper-scissors',

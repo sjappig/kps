@@ -10,9 +10,9 @@
 
 <script>
 import KPSContract from '@/services/KPSContract';
-import Rock from '@/components/selection/Rock.vue';
-import Paper from '@/components/selection/Paper.vue';
-import Scissors from '@/components/selection/Scissors.vue';
+import Rock from '@/components/selection/Rock';
+import Paper from '@/components/selection/Paper';
+import Scissors from '@/components/selection/Scissors';
 
 export default {
   components: {

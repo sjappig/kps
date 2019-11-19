@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import Selection from '@/components/selection/Selection.vue';
+import Selection from '@/components/selection/Selection';
 
 export default {
   components: {
