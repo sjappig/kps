@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+
 import KPSContract from '@/services/KPSContract';
 import Rock from '@/components/selection/Rock';
 import Paper from '@/components/selection/Paper';
@@ -23,22 +25,16 @@ export default {
   mounted() {
     KPSContract.initialise();
   },
-  data: function() {
-    return {
-      selection: undefined,
-      gameEndedSubscription: undefined,
-      nonce: undefined,
-      gameIdentifier: undefined
-    }
+  computed: {
+    ...mapState([
+      'selection',
+      'gameIdentifier'
+    ])
   },
   methods: {
-    async select(selection) {
-      if (this.selection !== undefined) {
-        return;
-      }
-      this.selection = selection;
-      await KPSContract.select(selection, this.gameStarted, this.gameEnded);
-    },
+    ...mapActions([
+      'select'
+    ]),
     gameStarted(gameIdentifier, nonce, gameEndedSubscription) {
       this.gameIdentifier = gameIdentifier;
       this.nonce = nonce;

@@ -1,22 +1,21 @@
 import Web3 from 'web3';
 import { abi } from 'contracts/KPS.json';
 
-const contractAddress = '0xCfB3076E9008E812867B3C7AB300B8011AED6DF5';
+const contractAddress = '0xfcD80A0a3B682B84996e4BfcC07e39226b507FF0';
 
 class KPSContract {
   initialise() {
     const provider = (
       process.env.VUE_APP_BLOCKCHAIN_MODE === 'local' ?
-      new Web3.providers.HttpProvider('http://127.0.0.1:7545') :
+      new Web3.providers.HttpProvider('http://127.0.0.1:9545') :
       window.ethereum
     );
     this.web3 = new Web3(provider);
   }
 
-  async select(selection) {
+  async startGame(selection, nonce) {
     // eslint-disable-next-line
     console.log(selection);
-    const nonce = this.nonce;
     const contract = await this.contract();
     const selectionHash = this.calculateSelectionHash(selection, nonce);
     // eslint-disable-next-line
@@ -33,10 +32,6 @@ class KPSContract {
 
   async accounts() {
     return this.web3.eth.getAccounts();
-  }
-
-  get nonce() {
-    return Math.floor(Math.random() * 1234567890);
   }
 
   async contract() {
