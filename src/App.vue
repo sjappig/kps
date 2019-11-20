@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import SelectionView from '@/views/SelectionView'
 
 export default {
@@ -13,7 +14,12 @@ export default {
     SelectionView
   },
   async mounted() {
-    await window.ethereum.enable();
+    await this.initialise();
+  },
+  methods: {
+    ...mapActions([
+      'initialise'
+    ])
   }
 }
 </script>

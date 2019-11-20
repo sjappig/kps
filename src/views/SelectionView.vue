@@ -11,7 +11,6 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 
-import KPSContract from '@/services/KPSContract';
 import Rock from '@/components/selection/Rock';
 import Paper from '@/components/selection/Paper';
 import Scissors from '@/components/selection/Scissors';
@@ -21,9 +20,6 @@ export default {
     Rock,
     Paper,
     Scissors
-  },
-  mounted() {
-    KPSContract.initialise();
   },
   computed: {
     ...mapState([

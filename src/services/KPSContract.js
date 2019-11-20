@@ -4,13 +4,22 @@ import { abi } from 'contracts/KPS.json';
 const contractAddress = '0xfcD80A0a3B682B84996e4BfcC07e39226b507FF0';
 
 class KPSContract {
-  initialise() {
-    const provider = (
-      process.env.VUE_APP_BLOCKCHAIN_MODE === 'local' ?
-      new Web3.providers.HttpProvider('http://127.0.0.1:9545') :
-      window.ethereum
-    );
+  async initialise() {
+    const provider = await this.getWeb3Provider();
+
     this.web3 = new Web3(provider);
+  }
+
+  async getWeb3Provider() {
+    const { VUE_APP_BLOCKCHAIN_HTTP_PROVIDER : httpProvider } = process.env;
+
+    if (httpProvider) {
+      return new Web3.providers.HttpProvider(httpProvider);
+    }
+
+    await window.ethereum.enable();
+
+    return window.ethereum;
   }
 
   async startGame(selection, nonce) {
