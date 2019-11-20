@@ -24,15 +24,18 @@ class KPSContract {
   }
 
   async getContract() {
-    const accounts = await this.web3.eth.getAccounts();
+    const [ account ] = await this.web3.eth.getAccounts();
 
-    return new this.web3.eth.Contract(abi, process.env.VUE_APP_CONTRACT_ADDRESS, { from: accounts[0], gas: 1000000 });
+    return new this.web3.eth.Contract(abi, process.env.VUE_APP_CONTRACT_ADDRESS, { from: account, gas: 1000000 });
   }
 
   async startGame(selection, nonce) {
     const selectionHash = this.calculateSelectionHash(selection, nonce);
-    // eslint-disable-next-line
-    console.log(await this.contract.methods.startGame(selectionHash).send({ value: this.web3.utils.toWei('1', 'finney') }));
+    const value = this.web3.utils.toWei('1', 'finney');
+
+    const { events } = await this.contract.methods.startGame(selectionHash).send({ value });
+
+    return events.GameStarted.returnValues.gameIdentifier;
   }
 
   calculateSelectionHash(selection, nonce) {
