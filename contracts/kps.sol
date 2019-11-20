@@ -3,7 +3,8 @@ pragma solidity ^0.5.0;
 contract KPS {
     enum Selection { NONE, ROCK, PAPER, SCISSORS }
 
-    event GameStarted(address indexed addr, uint256 indexed gameIdentifier);
+    event PlayerAdded(uint256 gameIdentifier);
+    event GameStarted(uint256 indexed gameIdentifier);
     event Revealed(uint256 indexed gameIdentifier, address addr, Selection selection);
 
     event Winner(uint256 indexed gameIdentifier, address addr);
@@ -51,7 +52,11 @@ contract KPS {
 
         pendingGame = isGamePending ? 0 : currentGame;
 
-        emit GameStarted(msg.sender, currentGame);
+        emit PlayerAdded(currentGame);
+
+        if (isGamePending) {
+          emit GameStarted(currentGame);
+        }
     }
 
     function reveal(uint256 gameIdentifier, uint256 nonce, Selection selection) public {

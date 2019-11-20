@@ -26,8 +26,14 @@ export default {
   computed: {
     ...mapState([
       'selection',
-      'gameIdentifier'
+      'gameIdentifier',
+      'hasOpponent'
     ])
+  },
+  watch: {
+    hasOpponent() {
+      this.$router.push('Reveal');
+    }
   },
   methods: {
     ...mapActions([

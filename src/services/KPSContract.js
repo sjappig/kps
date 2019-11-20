@@ -29,13 +29,17 @@ class KPSContract {
     return new this.web3.eth.Contract(abi, process.env.VUE_APP_CONTRACT_ADDRESS, { from: account, gas: 1000000 });
   }
 
-  async startGame(selection, nonce) {
+  async startGame(selection, nonce, gameStartedCallback) {
     const selectionHash = this.calculateSelectionHash(selection, nonce);
     const value = this.web3.utils.toWei('1', 'finney');
 
     const { events } = await this.contract.methods.startGame(selectionHash).send({ value });
 
-    return events.GameStarted.returnValues.gameIdentifier;
+    const { gameIdentifier } = events.PlayerAdded.returnValues;
+
+    this.subscribe('GameStarted', { gameIdentifier }, gameStartedCallback);
+
+    return gameIdentifier;
   }
 
   calculateSelectionHash(selection, nonce) {
@@ -58,6 +62,23 @@ class KPSContract {
     }
 
     return kpsMap[selection];
+  }
+
+  subscribe(eventName, filter, callback) {
+    let timer = null;
+
+    const timerClearingCallback = evt => {
+      if (timer) {
+        clearInterval(timer);
+      }
+      callback(evt);
+    };
+
+    const intervalFunc = () => {
+      this.contract.getPastEvents(eventName, { filter }, (err, [evt]) => evt ? timerClearingCallback(evt) : undefined);
+    };
+
+    timer = setInterval(intervalFunc, 1000);
   }
 }
 
