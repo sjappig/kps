@@ -5,7 +5,7 @@
   "scripts": {
     "migrate-contracts": "tools/migrate.sh",
     "serve": "vue-cli-service serve --mode=development",
-    "serve-blockchain": "truffle develop",
+    "serve-blockchain": "truffle develop --network=local",
     "build": "vue-cli-service build",
     "test": "truffle test",
     "lint": "solhint contracts/*.sol && vue-cli-service lint"
