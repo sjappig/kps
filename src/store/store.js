@@ -22,6 +22,10 @@ export const store = new Vuex.Store({
 
     setGameIdentifier(state, gameIdentifier) {
       state.gameIdentifier = gameIdentifier;
+    },
+
+    setSelection(state, selection) {
+      state.selection = selection;
     }
   },
   actions: {
@@ -33,6 +37,7 @@ export const store = new Vuex.Store({
       const gameIdentifier = await KPSContract.startGame(selection, nonce);
       commit('setNonce', nonce);
       commit('setGameIdentifier', gameIdentifier);
+      commit('setSelection', selection);
     }
   }
 });
