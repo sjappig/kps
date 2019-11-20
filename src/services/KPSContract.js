@@ -29,6 +29,10 @@ class KPSContract {
     return new this.web3.eth.Contract(abi, process.env.VUE_APP_CONTRACT_ADDRESS, { from: account, gas: 1000000 });
   }
 
+  generateNonce() {
+    return this.web3.utils.randomHex(32);
+  }
+
   async startGame(selection, nonce, gameStartedCallback) {
     const selectionHash = this.calculateSelectionHash(selection, nonce);
     const value = this.web3.utils.toWei('1', 'finney');

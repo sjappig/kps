@@ -41,7 +41,7 @@ export const store = new Vuex.Store({
       await KPSContract.initialise();
     },
     async select({ commit }, selection) {
-      const nonce = Math.floor(Math.random() * 1234567890);
+      const nonce = KPSContract.generateNonce();
       const gameIdentifier = await KPSContract.startGame(selection, nonce, () => commit('setHasOpponent', true));
       commit('setNonce', nonce);
       commit('setGameIdentifier', gameIdentifier);
