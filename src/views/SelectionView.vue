@@ -4,7 +4,7 @@
     <rock :selection="selection" @select="select"></rock>
     <paper :selection="selection" @select="select"></paper>
     <scissors :selection="selection" @select="select"></scissors>
-    <button :disabled="gameIdentifier === undefined" @click="reveal">Reveal</button>
+    <button :disabled="gameIdentifier === undefined">Reveal</button>
   </div>
 </template>
 
@@ -34,25 +34,7 @@ export default {
   methods: {
     ...mapActions([
       'select'
-    ]),
-    gameStarted(gameIdentifier, nonce, gameEndedSubscription) {
-      this.gameIdentifier = gameIdentifier;
-      this.nonce = nonce;
-      this.gameEndedSubscription = gameEndedSubscription;
-    },
-    gameEnded(opponentResult) {
-      // eslint-disable-next-line
-      console.log(opponentResult);
-    },
-    async reveal() {
-      this.gameEndedSubscription.unsubscribe();
-      const result = await KPSContract.reveal(this.gameIdentifier, this.nonce, this.selection);
-      // eslint-disable-next-line
-      console.log(result);
-    }
+    ])
   }
 }
 </script>
-
-<style scoped>
-</style>
