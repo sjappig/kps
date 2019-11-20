@@ -1,7 +1,6 @@
 import Web3 from 'web3';
 import { abi } from 'contracts/KPS.json';
 
-const contractAddress = '0xfcD80A0a3B682B84996e4BfcC07e39226b507FF0';
 
 class KPSContract {
   async initialise() {
@@ -46,7 +45,7 @@ class KPSContract {
   async contract() {
     const accounts = await this.accounts();
 
-    return new this.web3.eth.Contract(abi, contractAddress, { from: accounts[0], gas: 1000000 });
+    return new this.web3.eth.Contract(abi, process.env.VUE_APP_CONTRACT_ADDRESS, { from: accounts[0], gas: 1000000 });
   }
 
   toSelectionEnum(selection) {
