@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/sjappig/kps/workflows/Default%20pipeline/badge.svg)](https://github.com/sjappig/kps/actions)
+
 # kps
 
 Rock, paper, scissors implemented with Ethereum smart contract and VueJS frontend.
