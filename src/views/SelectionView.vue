@@ -1,11 +1,9 @@
 <template>
   <div>
     <overlay text="Waiting for opponent..." v-if="selection"></overlay>
-    <h1>Select rock, paper or scissors</h1>
     <rock :selection="selection" @select="select"></rock>
     <paper :selection="selection" @select="select"></paper>
     <scissors :selection="selection" @select="select"></scissors>
-    <button :disabled="gameIdentifier === undefined">Reveal</button>
   </div>
 </template>
 
