@@ -55,7 +55,7 @@ contract KPS {
         emit PlayerAdded(currentGame);
 
         if (isGamePending) {
-          emit GameStarted(currentGame);
+            emit GameStarted(currentGame);
         }
     }
 
