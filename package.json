@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "migrate-contracts": "tools/migrate.sh",
     "serve": "vue-cli-service serve --mode=development",
+    "serve-blockchain": "truffle develop",
     "build": "vue-cli-service build",
     "test": "truffle test",
     "lint": "vue-cli-service lint"

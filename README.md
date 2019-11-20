@@ -4,29 +4,23 @@
 
 Rock, paper, scissors implemented with Ethereum smart contract and VueJS frontend.
 
-# kps-ui
-
 ## Project setup
 ```
 npm install
 ```
 
-### Run development server
+### Development environment
+
+Development environment uses Truffle development blockchain and Webpack devserver. Application is served in port 8080.
+
 ```
+npm run serve-blockchain
+npm run migrate-contracts
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Running tests and static analysator
 ```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
+npm test
 npm run lint
 ```
