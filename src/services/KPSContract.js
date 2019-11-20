@@ -50,9 +50,10 @@ class KPSContract {
   }
 
   async reveal(gameIdentifier, nonce, selection) {
-    return await this.contract.methods.reveal(gameIdentifier, nonce, this.toSelectionEnum(selection)).send();
+    const { events } = await this.contract.methods.reveal(gameIdentifier, nonce, this.toSelectionEnum(selection)).send();
+    // eslint-disable-next-line
+    console.log(events);
   }
-
 
   toSelectionEnum(selection) {
     const kpsMap = {

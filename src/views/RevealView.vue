@@ -3,11 +3,12 @@
     <player-selection :selection="selection"></player-selection>
     <h3>VS</h3>
     <player-selection :selection="opponentSelection"></player-selection>
+    <button v-if="!hasRevealed" @click="reveal">Reveal your choice</button>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import PlayerSelection from '@/components/selection/PlayerSelection';
 
@@ -19,6 +20,12 @@ export default {
     ...mapState([
       'selection',
       'opponentSelection',
+      'hasRevealed'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'reveal'
     ])
   }
 }

@@ -30,6 +30,10 @@ export const store = new Vuex.Store({
 
     setHasOpponent(state, hasOpponent) {
       state.hasOpponent = hasOpponent;
+    },
+
+    setHasRevealed(state, hasRevealed) {
+      state.hasRevealed = hasRevealed;
     }
   },
   actions: {
@@ -42,6 +46,10 @@ export const store = new Vuex.Store({
       commit('setNonce', nonce);
       commit('setGameIdentifier', gameIdentifier);
       commit('setSelection', selection);
+    },
+    async reveal({ commit, state }) {
+      await KPSContract.reveal(state.gameIdentifier, state.nonce, state.selection);
+      commit('setHasRevealed', true);
     }
   }
 });
