@@ -21,10 +21,6 @@ img {
   margin: 1px;
 }
 
-img.disabled {
-  opacity: 0.5;
-}
-
 img:not(.disabled):hover {
   box-shadow: 0 0 2px 1px black;
 }
