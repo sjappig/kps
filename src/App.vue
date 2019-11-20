@@ -1,18 +1,13 @@
 <template>
   <div id="app">
-    <selection-view></selection-view>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
-import SelectionView from '@/views/SelectionView'
 
 export default {
-  name: 'Rock-paper-scissors',
-  components: {
-    SelectionView
-  },
   async mounted() {
     await this.initialise();
   },
