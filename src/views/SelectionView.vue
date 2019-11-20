@@ -1,5 +1,6 @@
 <template>
-  <div class="kps">
+  <div>
+    <overlay text="Waiting for opponent..." v-if="selection"></overlay>
     <h1>Select rock, paper or scissors</h1>
     <rock :selection="selection" @select="select"></rock>
     <paper :selection="selection" @select="select"></paper>
@@ -15,11 +16,14 @@ import Rock from '@/components/selection/Rock';
 import Paper from '@/components/selection/Paper';
 import Scissors from '@/components/selection/Scissors';
 
+import Overlay from '@/components/overlay/Overlay';
+
 export default {
   components: {
     Rock,
     Paper,
-    Scissors
+    Scissors,
+    Overlay
   },
   computed: {
     ...mapState([
