@@ -11,7 +11,7 @@ Rock, paper, scissors implemented with Ethereum smart contract and VueJS fronten
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Run development server
 ```
 npm run serve
 ```
@@ -30,6 +30,3 @@ npm run test
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
