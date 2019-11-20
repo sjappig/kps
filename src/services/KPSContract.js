@@ -7,6 +7,8 @@ class KPSContract {
     const provider = await this.getWeb3Provider();
 
     this.web3 = new Web3(provider);
+
+    this.contract = await this.getContract();
   }
 
   async getWeb3Provider() {
@@ -21,32 +23,29 @@ class KPSContract {
     return window.ethereum;
   }
 
-  async startGame(selection, nonce) {
-    // eslint-disable-next-line
-    console.log(selection);
-    const contract = await this.contract();
-    const selectionHash = this.calculateSelectionHash(selection, nonce);
-    // eslint-disable-next-line
-    console.log(selectionHash);
-    // eslint-disable-next-line
-    console.log(await contract.methods.startGame(selectionHash).send({ value: this.web3.utils.toWei('1', 'finney') }));
-  }
-
-  async reveal(gameIdentifier, nonce, selection) {
-    const contract = await this.contract();
-
-    return await contract.methods.reveal(gameIdentifier, nonce, this.toSelectionEnum(selection)).send();
-  }
-
-  async accounts() {
-    return this.web3.eth.getAccounts();
-  }
-
-  async contract() {
-    const accounts = await this.accounts();
+  async getContract() {
+    const accounts = await this.web3.eth.getAccounts();
 
     return new this.web3.eth.Contract(abi, process.env.VUE_APP_CONTRACT_ADDRESS, { from: accounts[0], gas: 1000000 });
   }
+
+  async startGame(selection, nonce) {
+    const selectionHash = this.calculateSelectionHash(selection, nonce);
+    // eslint-disable-next-line
+    console.log(await this.contract.methods.startGame(selectionHash).send({ value: this.web3.utils.toWei('1', 'finney') }));
+  }
+
+  calculateSelectionHash(selection, nonce) {
+    return this.web3.utils.soliditySha3(
+      { type: 'uint256', value: nonce },
+      { type: 'uint8', value: this.toSelectionEnum(selection) }
+    )
+  }
+
+  async reveal(gameIdentifier, nonce, selection) {
+    return await this.contract.methods.reveal(gameIdentifier, nonce, this.toSelectionEnum(selection)).send();
+  }
+
 
   toSelectionEnum(selection) {
     const kpsMap = {
@@ -56,13 +55,6 @@ class KPSContract {
     }
 
     return kpsMap[selection];
-  }
-
-  calculateSelectionHash(selection, nonce) {
-    return this.web3.utils.soliditySha3(
-      { type: 'uint256', value: nonce },
-      { type: 'uint8', value: this.toSelectionEnum(selection) }
-    )
   }
 }
 
