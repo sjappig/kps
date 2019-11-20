@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/sjappig/kps/workflows/Default%20pipeline/badge.svg)](https://github.com/sjappig/kps/actions)
+[![Actions Status](https://github.com/sjappig/kps/workflows/Test%20and%20lint/badge.svg)](https://github.com/sjappig/kps/actions)
 
 # kps
 

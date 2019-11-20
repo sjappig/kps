@@ -1,4 +1,4 @@
-name: Default pipeline
+name: Test and lint
 
 on: [push]
 
