@@ -33,7 +33,7 @@ class KPSContract {
     return this.web3.utils.randomHex(32);
   }
 
-  async startGame({ selection, nonce, gameStartedCallback, revealedCallback, account }) {
+  async startGame({ selection, nonce, gameStartedCallback, revealedCallback, resultCallback, account }) {
     const selectionHash = this.calculateSelectionHash(selection, nonce);
     const value = this.web3.utils.toWei('1', 'finney');
 
@@ -42,8 +42,9 @@ class KPSContract {
     const { gameIdentifier } = events.PlayerAdded.returnValues;
 
     this.subscribe('GameStarted', { gameIdentifier }, gameStartedCallback);
-
     this.subscribe('Revealed', { gameIdentifier }, ({ returnValues }) => returnValues.addr !== account ? revealedCallback(this.convertSelection(returnValues)) : true);
+    this.subscribe('Winner', { gameIdentifier }, ({ returnValues }) => returnValues.addr === account ? resultCallback('winner') : resultCallback('loser'));
+    this.subscribe('Tie', { gameIdentifier }, () => resultCallback('tie'));
 
     return gameIdentifier;
   }

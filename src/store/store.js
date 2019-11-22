@@ -48,6 +48,10 @@ export const store = new Vuex.Store({
 
     setAccount(state, account) {
       state.account = account;
+    },
+
+    setResult(state, result) {
+      state.result = result;
     }
   },
   actions: {
@@ -65,11 +69,14 @@ export const store = new Vuex.Store({
       const nonce = KPSContract.generateNonce();
       const gameStartedCallback = () => commit('setHasOpponent', true) && false;
       const revealedCallback = selection => commit('setOpponentSelection', selection) && false;
+      const resultCallback = result => commit('setResult', result) && false;
+
       const gameIdentifier = await KPSContract.startGame({
         selection,
         nonce,
         gameStartedCallback,
         revealedCallback,
+        resultCallback,
         account
       });
       commit('setNonce', nonce);
