@@ -1,6 +1,13 @@
 <template>
   <div>
     <overlay text="Waiting for opponent..." v-if="selection"></overlay>
+
+    <div>
+      <select @change="evt => setAccount(evt.target.value)">
+        <option v-for="account in allAccounts" :key="account" :value="account">{{ account }}</option>
+      </select>
+    </div>
+
     <rock :selection="selection" @select="select"></rock>
     <paper :selection="selection" @select="select"></paper>
     <scissors :selection="selection" @select="select"></scissors>
@@ -8,7 +15,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 import Rock from '@/components/selection/Rock';
 import Paper from '@/components/selection/Paper';
@@ -27,7 +34,8 @@ export default {
     ...mapState([
       'selection',
       'gameIdentifier',
-      'hasOpponent'
+      'hasOpponent',
+      'allAccounts'
     ])
   },
   watch: {
@@ -38,6 +46,9 @@ export default {
   methods: {
     ...mapActions([
       'select'
+    ]),
+    ...mapMutations([
+      'setAccount'
     ])
   }
 }

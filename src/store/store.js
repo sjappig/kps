@@ -13,7 +13,9 @@ export const store = new Vuex.Store({
     opponentSelection: null,
     hasOpponent: false,
     hasRevealed: false,
-    result: null
+    result: null,
+    account: null,
+    allAccounts: []
   },
   mutations: {
     setNonce(state, nonce) {
@@ -38,28 +40,45 @@ export const store = new Vuex.Store({
 
     setHasRevealed(state, hasRevealed) {
       state.hasRevealed = hasRevealed;
+    },
+
+    setAllAccounts(state, allAccounts) {
+      state.allAccounts = allAccounts;
+    },
+
+    setAccount(state, account) {
+      state.account = account;
     }
   },
   actions: {
-    async initialise() {
-      await KPSContract.initialise();
+    async initialise({ commit }) {
+      const allAccounts = await KPSContract.initialise();
+
+      commit('setAllAccounts', allAccounts);
+      commit('setAccount', allAccounts[0]);
     },
-    async select({ commit }, selection) {
+    async getAccounts() {
+      return KPSContract.getAccounts();
+    },
+    async select({ commit, state }, selection) {
+      const { account } = state;
       const nonce = KPSContract.generateNonce();
-      const gameStartedCallback = () => commit('setHasOpponent', true);
-      const revealedCallback = selection => commit('setOpponentSelection', selection);
+      const gameStartedCallback = () => commit('setHasOpponent', true) && false;
+      const revealedCallback = selection => commit('setOpponentSelection', selection) && false;
       const gameIdentifier = await KPSContract.startGame({
         selection,
         nonce,
         gameStartedCallback,
-        revealedCallback
+        revealedCallback,
+        account
       });
       commit('setNonce', nonce);
       commit('setGameIdentifier', gameIdentifier);
       commit('setSelection', selection);
     },
     async reveal({ commit, state }) {
-      await KPSContract.reveal(state.gameIdentifier, state.nonce, state.selection);
+      const { gameIdentifier, nonce, selection, account } = state;
+      await KPSContract.reveal({ gameIdentifier, nonce, selection, account});
       commit('setHasRevealed', true);
     }
   }
