@@ -28,6 +28,10 @@ export const store = new Vuex.Store({
       state.selection = selection;
     },
 
+    setOpponentSelection(state, opponentSelection) {
+      state.opponentSelection = opponentSelection;
+    },
+
     setHasOpponent(state, hasOpponent) {
       state.hasOpponent = hasOpponent;
     },
@@ -42,7 +46,14 @@ export const store = new Vuex.Store({
     },
     async select({ commit }, selection) {
       const nonce = KPSContract.generateNonce();
-      const gameIdentifier = await KPSContract.startGame(selection, nonce, () => commit('setHasOpponent', true));
+      const gameStartedCallback = () => commit('setHasOpponent', true);
+      const revealedCallback = selection => commit('setOpponentSelection', selection);
+      const gameIdentifier = await KPSContract.startGame({
+        selection,
+        nonce,
+        gameStartedCallback,
+        revealedCallback
+      });
       commit('setNonce', nonce);
       commit('setGameIdentifier', gameIdentifier);
       commit('setSelection', selection);

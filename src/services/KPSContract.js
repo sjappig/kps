@@ -33,7 +33,7 @@ class KPSContract {
     return this.web3.utils.randomHex(32);
   }
 
-  async startGame(selection, nonce, gameStartedCallback) {
+  async startGame({selection, nonce, gameStartedCallback, revealedCallback}) {
     const selectionHash = this.calculateSelectionHash(selection, nonce);
     const value = this.web3.utils.toWei('1', 'finney');
 
@@ -43,40 +43,52 @@ class KPSContract {
 
     this.subscribe('GameStarted', { gameIdentifier }, gameStartedCallback);
 
+    this.subscribe('Revealed', { gameIdentifier }, ({ returnValues }) => revealedCallback(this.convertSelection(returnValues)));
+
     return gameIdentifier;
   }
 
   calculateSelectionHash(selection, nonce) {
     return this.web3.utils.soliditySha3(
       { type: 'uint256', value: nonce },
-      { type: 'uint8', value: this.toSelectionEnum(selection) }
+      { type: 'uint8', value: this.convertSelection({ str: selection }) }
     )
   }
 
   async reveal(gameIdentifier, nonce, selection) {
-    const { events } = await this.contract.methods.reveal(gameIdentifier, nonce, this.toSelectionEnum(selection)).send();
+    const { events } = await this.contract.methods.reveal(gameIdentifier, nonce, this.convertSelection({ str: selection })).send();
     // eslint-disable-next-line
     console.log(events);
   }
 
-  toSelectionEnum(selection) {
+  convertSelection({ str, selection }) {
     const kpsMap = {
       rock: 1,
       paper: 2,
       scissors: 3
     }
 
-    return kpsMap[selection];
+    if (str !== undefined) {
+      return kpsMap[str];
+    }
+
+    for (const key in kpsMap) {
+      // loose equality used deliberately
+      if (kpsMap[key] == selection) {
+        return key;
+      }
+    }
   }
 
   subscribe(eventName, filter, callback) {
     let timer = null;
 
     const timerClearingCallback = evt => {
-      if (timer) {
+      const keepPolling = callback(evt);
+
+      if (!keepPolling & timer) {
         clearInterval(timer);
       }
-      callback(evt);
     };
 
     const intervalFunc = () => {
