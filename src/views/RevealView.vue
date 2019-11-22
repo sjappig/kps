@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div>
+      Game: {{ gameIdentifier }}
+    </div>
     <player-selection :selection="selection"></player-selection>
     <h3>VS</h3>
     <player-selection :selection="opponentSelection"></player-selection>
@@ -20,7 +23,9 @@ export default {
     ...mapState([
       'selection',
       'opponentSelection',
-      'hasRevealed'
+      'hasRevealed',
+      'gameIdentifier',
+      'account'
     ])
   },
   methods: {
